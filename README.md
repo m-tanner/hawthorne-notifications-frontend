@@ -96,6 +96,10 @@ To build the Docker image to deploy to production:
 docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://hawthorne-notifications-frontend-sdo7vkuv7q-uw.a.run.app --platform linux/amd64 -t hawthorne-notifications-frontend:latest .
 ```
 
+```bash
+docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://hawthornestereo.news --platform linux/amd64 -t hawthorne-notifications-frontend:latest .
+```
+
 ### Run the Docker Container
 
 Run the Docker container:
