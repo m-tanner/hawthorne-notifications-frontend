@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useParams} from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 const UserProfileForm = () => {
   const { id } = useParams();
@@ -14,6 +14,7 @@ const UserProfileForm = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [triggerResponse, setTriggerResponse] = useState(null); // State to hold trigger response
 
   useEffect(() => {
     // Fetch user data from the API when the component mounts
@@ -81,6 +82,24 @@ const UserProfileForm = () => {
     }
   };
 
+  const triggerNotifications = async () => {
+    try {
+      const response = await fetch(`/api/trigger`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to trigger notifications');
+      }
+      setTriggerResponse({ success: true, message: result.message });
+    } catch (err) {
+      setTriggerResponse({ success: false, message: err.message });
+    }
+  };
+
   if (loading) {
     return (
         <div className={"user-profile-form-container"}>
@@ -108,7 +127,7 @@ const UserProfileForm = () => {
   if (error) {
     return (
         <div className={"user-profile-form-container"}>
-          <p>Error: {error}</p>;
+          <p>Error: {error}</p>
         </div>
     );
   }
@@ -160,7 +179,7 @@ const UserProfileForm = () => {
             />
           </div>
           <div className="form-group checkbox-group">
-            <label htmlFor="favorites_only">Unsubscribe?</label>
+            <label htmlFor="unsubscribe">Unsubscribe?</label>
             <input
                 type="checkbox"
                 id="unsubscribe"
@@ -172,6 +191,22 @@ const UserProfileForm = () => {
           <button type="submit">Save</button>
           {error && <p>Error: {error}</p>}
         </form>
+        {/* Conditionally render the "Trigger Notifications" button */}
+        {(formData.email_address.endsWith('@hawthornestereo.com') || formData.email_address.endsWith('@tanner-wei.com')) && (
+            <div style={{marginTop: '20px'}}>
+              <button onClick={triggerNotifications}>Trigger Notifications</button>
+              {/* Show trigger response */}
+              {triggerResponse && (
+                  <p>
+                    {triggerResponse.success ? (
+                        <span>Success: {triggerResponse.message}</span>
+                    ) : (
+                        <span>Error: {triggerResponse.message}</span>
+                    )}
+                  </p>
+              )}
+            </div>
+        )}
       </div>
   );
 };

@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const {response} = require("express");
 
 const app = express();
 const port = 3000;
@@ -62,7 +61,7 @@ app.post('/api/user', async (req, res) => {
         throw new Error('Failed to fetch data from the external server');
     }
 
-    console.log('User profile updated successfully')
+    console.log('User profile updated successfully');
     res.json({success: true, message: 'User profile updated successfully'});
 });
 
@@ -80,6 +79,28 @@ app.get('/api/user/:id', async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error('Error fetching data:', error);
+        res.status(500).json({error: 'Internal server error'});
+    }
+});
+
+// New API endpoint to trigger notifications
+app.post('/api/trigger', async (req, res) => {
+    try {
+        const response = await fetch(`${backendURL}/trigger`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to trigger notifications on the external server');
+        }
+
+        console.log('Notifications triggered successfully');
+        res.status(200).json({success: true, message: 'Notifications triggered successfully'});
+    } catch (error) {
+        console.error('Error triggering notifications:', error);
         res.status(500).json({error: 'Internal server error'});
     }
 });
