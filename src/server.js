@@ -74,6 +74,7 @@ app.get('/api/user/:id', async (req, res) => {
         res.status(500).json({error: 'Internal server error'});
     } else {
         const data = await response.json();
+        console.log('Successfully fetched data from external server');
         res.json(data);
     }
 });

@@ -8,43 +8,26 @@ const UserProfileForm = () => {
         email_address: '',
         favorite_keywords: [],
         favorites_only: false,
-        unsubscribe: false,
+        unsubscribed: false,
     });
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
-    const [triggerResponse, setTriggerResponse] = useState(null); // State to hold trigger response
+    const [actionResponse, setActionResponse] = useState(null);
 
     useEffect(() => {
-        // Fetch user data from the API when the component mounts
-        const fetchUserData = async (userId) => {
-            const response = await fetch(`/api/user/${userId}`);
+        const fetchUserData = async () => {
+            setLoading(true);
+            const response = await fetch(`/api/user/${id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch user data");
             }
             const data = await response.json();
-            return {
-                preferredName: data.preferred_name || '',
-                emailAddress: data.email_address || '',
-                favoriteKeywords: data.favorite_keywords || [],
-                favoritesOnly: data.favorites_only || false,
-            };
-        };
-        const updateUserData = (data) => {
-            if (data) {
-                setFormData(data);
-            }
+            setFormData(data);
             setLoading(false);
         };
 
-        const fetchData = async () => {
-            setLoading(true);
-            const userData = await fetchUserData(id);
-            updateUserData(userData);
-        };
-
-        fetchData().catch((error) => {
+        fetchUserData().catch((error) => {
             setError(error.message);
             setLoading(false);
         });
@@ -60,7 +43,7 @@ const UserProfileForm = () => {
         } else if (name === 'favorite_keywords') {
             setFormData((prevData) => ({
                 ...prevData,
-                [name]: value.split(',').map((item) => item.trim()),
+                [name]: value.split(',')
             }));
         } else {
             setFormData((prevData) => ({
@@ -76,7 +59,13 @@ const UserProfileForm = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({secret: id, user: formData}),
+            body: JSON.stringify({
+                secret: id,
+                user: {
+                    ...formData,
+                    favorite_keywords: formData.favorite_keywords.map((keyword) => keyword.trim())
+                }
+            }),
         });
 
         if (!response.ok) {
@@ -90,9 +79,10 @@ const UserProfileForm = () => {
         try {
             const data = await submitUserData(id, formData);
             console.log('Form Data Submitted:', data);
-            setSubmitted(true);
+            setActionResponse({success: true, message: 'User profile updated successfully!'});
         } catch (error) {
             setError(error.message);
+            setActionResponse({success: false, message: error.message});
         }
     };
 
@@ -124,15 +114,15 @@ const UserProfileForm = () => {
     const handleTriggerNotifications = async () => {
         try {
             const result = await triggerNotificationsApi();
-            setTriggerResponse({success: true, message: result.message});
+            setActionResponse({success: true, message: result.message});
         } catch (error) {
-            setTriggerResponse({success: false, message: error.message});
+            setActionResponse({success: false, message: error.message});
         }
     };
 
     const triggerNotifications = () => {
         handleTriggerNotifications().catch((error) => {
-            setTriggerResponse({success: false, message: error.message});
+            setActionResponse({success: false, message: error.message});
         });
     };
 
@@ -140,14 +130,6 @@ const UserProfileForm = () => {
         return (
             <div className={"user-profile-form-container"}>
                 <p>Loading...</p>
-            </div>
-        );
-    }
-
-    if (submitted) {
-        return (
-            <div className={"user-profile-form-container"}>
-                <p>Form submitted successfully!</p>
             </div>
         );
     }
@@ -163,7 +145,7 @@ const UserProfileForm = () => {
     if (error) {
         return (
             <div className={"user-profile-form-container"}>
-                <p>Error: {error}</p>
+                <p>Unexpected Error: {error}</p>
             </div>
         );
     }
@@ -195,12 +177,12 @@ const UserProfileForm = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="favorite_keywords">Favorite Keywords (comma-separated):</label>
+                    <label htmlFor="favorite_keywords">Favorite Keywords (comma-separated, no phrases):</label>
                     <input
                         type="text"
                         id="favorite_keywords"
                         name="favorite_keywords"
-                        value={formData.favorite_keywords.join(', ')}
+                        value={Array.isArray(formData.favorite_keywords) ? formData.favorite_keywords.join(',') : ''}
                         onChange={handleChange}
                     />
                 </div>
@@ -220,7 +202,7 @@ const UserProfileForm = () => {
                         type="checkbox"
                         id="unsubscribe"
                         name="unsubscribe"
-                        checked={formData.unsubscribe}
+                        checked={formData.unsubscribed}
                         onChange={handleChange}
                     />
                 </div>
@@ -236,24 +218,26 @@ const UserProfileForm = () => {
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub Icon"/>
                     Submit Issues & Feature Requests
                 </a>
-                {error && <p>Error: {error}</p>}
             </form>
             {/* Conditionally render the "Trigger Notifications" button */}
-            {(formData.email_address.endsWith('@hawthornestereo.com') || formData.email_address.endsWith('@tanner-wei.com')) && (
+            {(typeof formData.email_address === 'string' &&
+                    (formData.email_address.endsWith('@hawthornestereo.com') ||
+                        formData.email_address.endsWith('@tanner-wei.com')))
+                && (
                 <div>
                     <button onClick={triggerNotifications}>Trigger Notifications</button>
-                    {/* Show trigger response */}
-                    {triggerResponse && (
-                        <p>
-                            {triggerResponse.success ? (
-                                <span>Success: {triggerResponse.message}</span>
-                            ) : (
-                                <span>Error: {triggerResponse.message}</span>
-                            )}
-                        </p>
-                    )}
                 </div>
             )}
+            {actionResponse && (
+                <p>
+                    {actionResponse.success ? (
+                        <span>Success: {actionResponse.message}</span>
+                    ) : (
+                        <span>Error: {actionResponse.message}</span>
+                    )}
+                </p>
+            )}
+            {error && <p>Error: {error}</p>}
         </div>
     );
 };
