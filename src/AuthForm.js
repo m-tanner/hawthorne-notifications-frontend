@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 const frontEndURL = process.env.REACT_APP_FRONTEND_BASE_URL;
 
@@ -13,7 +13,7 @@ const AuthForm = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email_address: email, url: `${frontEndURL}/user-profile/` }),
+            body: JSON.stringify({email_address: email, url: `${frontEndURL}/user-profile/`}),
         });
 
         if (!response.ok) {
