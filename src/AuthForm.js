@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 const frontEndURL = process.env.REACT_APP_FRONTEND_BASE_URL;
 
@@ -36,6 +36,14 @@ const AuthForm = () => {
             <div className="auth-form-container">
                 <h2>Check Your Email</h2>
                 <p>We've sent you an email with further instructions. Please check your inbox.</p>
+                <a href="https://www.buymeacoffee.com/m.tanner" target="_blank" rel="noopener noreferrer" className="coffee-button">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1040/1040230.png" alt="Coffee Icon" />
+                    Buy Me a Coffee
+                </a>
+                <a href="https://github.com/m-tanner/hawthornestereo-news/issues" target="_blank" rel="noopener noreferrer" className="github-button">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub Icon" />
+                    Submit Issues & Feature Requests
+                </a>
             </div>
         );
     }
@@ -59,6 +67,14 @@ const AuthForm = () => {
                 <button type="submit">Submit</button>
                 {message && <p>{message}</p>}
             </form>
+            <a href="https://www.buymeacoffee.com/m.tanner" target="_blank" rel="noopener noreferrer" className="coffee-button">
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046754.png" alt="Coffee Icon" />
+                Buy Me a Coffee
+            </a>
+            <a href="https://github.com/m-tanner/hawthornestereo-news/issues" target="_blank" rel="noopener noreferrer" className="github-button">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub Icon" />
+                Submit Issues & Feature Requests
+            </a>
         </div>
     );
 };

@@ -37,6 +37,9 @@ body, html {
     max-width: 400px;
     width: 100%;
     border: 1px solid #e1e1e1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Even spacing between form fields and buttons */
 }
 
 .user-profile-form-container {
@@ -49,13 +52,18 @@ body, html {
     border: 1px solid #e1e1e1;
 }
 
+/* Form group styling for even spacing */
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 0; /* Remove margin-bottom since we're using gap in the container */
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Small gap between label and input */
 }
 
 .checkbox-group {
     display: flex;
     align-items: center;
+    margin-bottom: 0; /* Remove margin-bottom since we're using gap in the container */
 }
 
 .checkbox-group label {
@@ -80,23 +88,11 @@ p {
     color: #333;
 }
 
-/* Form styling */
-.form-group {
-    margin-bottom: 16px;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
-}
-
+/* Input styling */
 input[type="email"],
 input[type="text"] {
     width: 100%;
     padding: 10px;
-    margin-bottom: 8px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -107,7 +103,6 @@ input[type="text"] {
 input[type="checkbox"] {
     width: 10%;
     padding: 10px;
-    margin-bottom: 8px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -115,6 +110,7 @@ input[type="checkbox"] {
     background-color: #f4f4f4;
 }
 
+/* Button styling with consistent spacing */
 button {
     width: 100%;
     padding: 12px;
@@ -125,6 +121,7 @@ button {
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.3s;
+    margin-top: 20px; /* Ensure consistent spacing with other elements */
 }
 
 button:hover {
@@ -140,4 +137,62 @@ a {
 a:hover {
     color: #002244;
     text-decoration: underline;
+}
+
+/* "Buy Me a Coffee" button styling */
+.coffee-button {
+    display: inline-flex;
+    align-items: center;
+    background-color: #FFDD00;
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    border: 2px solid #000000;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-align: center;
+    justify-content: center;
+    width: 100%; /* Full width button */
+}
+
+.coffee-button:hover {
+    background-color: #FFD700;
+    transform: scale(1.05);
+}
+
+.coffee-button img {
+    margin-right: 10px;
+    width: 24px;
+    height: 24px;
+}
+
+/* GitHub Issues button styling */
+.github-button {
+    display: inline-flex;
+    align-items: center;
+    background-color: #24292e;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    border: 2px solid #24292e;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-align: center;
+    justify-content: center;
+    width: 100%; /* Full width button */
+}
+
+.github-button:hover {
+    background-color: #444d56;
+    transform: scale(1.05);
+}
+
+.github-button img {
+    margin-right: 10px;
+    width: 24px;
+    height: 24px;
 }
