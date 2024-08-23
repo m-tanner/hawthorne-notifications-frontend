@@ -7,28 +7,40 @@ const AuthForm = () => {
     const [message, setMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const submitLoginForm = async (email, frontEndURL) => {
+        const response = await fetch(`/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email_address: email, url: `${frontEndURL}/user-profile/` }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to submit form');
+        }
+    };
+
+    const handleFormSubmission = async () => {
         setMessage(''); // Reset message state
 
         try {
-            const response = await fetch(`/api/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email_address: email, url: `${frontEndURL}/user-profile/` }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to submit form');
-            }
+            await submitLoginForm(email, frontEndURL);
             setSubmitted(true);
         } catch (error) {
             setMessage(`Error: ${error.message}`);
             console.error('Error:', error);
         }
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleFormSubmission().catch((error) => {
+            setMessage(`Error: ${error.message}`);
+            console.error('Error:', error);
+        });
+    };
+
 
     // Render the "check your email" message if the form has been submitted
     if (submitted) {
