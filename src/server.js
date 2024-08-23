@@ -68,18 +68,13 @@ app.post('/api/user', async (req, res) => {
 // API endpoint to fetch user data
 app.get('/api/user/:id', async (req, res) => {
     const {id} = req.params;
-    try {
-        const response = await fetch(`${backendURL}/user/${id}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch data from the external server');
-        }
-        const data = await response.json();
-
-        // Send the data back to the client
-        res.json(data);
-    } catch (error) {
-        console.error('Error fetching data:', error);
+    const response = await fetch(`${backendURL}/user/${id}`);
+    if (!response.ok) {
+        console.error('Error fetching data from external server');
         res.status(500).json({error: 'Internal server error'});
+    } else {
+        const data = await response.json();
+        res.json(data);
     }
 });
 
@@ -94,14 +89,14 @@ app.post('/api/trigger', async (req, res) => {
             body: JSON.stringify({}),
         });
         if (!response.ok) {
-            throw new Error('Failed to trigger notifications on the external server');
+            console.error('Error triggering notifications on the external server');
+            res.status(500).json({error: 'Internal server error'});
+        } else {
+            console.log('Notifications triggered successfully');
+            res.status(200).json({success: true, message: 'Notifications triggered successfully'});
         }
-
-        console.log('Notifications triggered successfully');
-        res.status(200).json({success: true, message: 'Notifications triggered successfully'});
     } catch (error) {
-        console.error('Error triggering notifications:', error);
-        res.status(500).json({error: 'Internal server error'});
+
     }
 });
 
