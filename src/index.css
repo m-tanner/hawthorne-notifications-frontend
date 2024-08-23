@@ -37,9 +37,6 @@ body, html {
     max-width: 400px;
     width: 100%;
     border: 1px solid #e1e1e1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Even spacing between form fields and buttons */
 }
 
 .user-profile-form-container {
@@ -52,18 +49,13 @@ body, html {
     border: 1px solid #e1e1e1;
 }
 
-/* Form group styling for even spacing */
 .form-group {
-    margin-bottom: 0; /* Remove margin-bottom since we're using gap in the container */
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Small gap between label and input */
+    margin-bottom: 16px;
 }
 
 .checkbox-group {
     display: flex;
     align-items: center;
-    margin-bottom: 0; /* Remove margin-bottom since we're using gap in the container */
 }
 
 .checkbox-group label {
@@ -75,7 +67,6 @@ body, html {
     margin-left: auto; /* Aligns the checkbox to the right of the label */
 }
 
-/* Typography */
 h2 {
     margin-top: 0;
     text-align: center;
@@ -88,47 +79,6 @@ p {
     color: #333;
 }
 
-/* Input styling */
-input[type="email"],
-input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: #f4f4f4;
-}
-
-input[type="checkbox"] {
-    width: 10%;
-    padding: 10px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: #f4f4f4;
-}
-
-/* Button styling with consistent spacing */
-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #01733F;
-    border: none;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    margin-top: 20px; /* Ensure consistent spacing with other elements */
-}
-
-button:hover {
-    background-color: #002244;
-}
-
-/* Link styling */
 a {
     color: #01733F;
     text-decoration: none;
@@ -139,22 +89,67 @@ a:hover {
     text-decoration: underline;
 }
 
-/* "Buy Me a Coffee" button styling */
-.coffee-button {
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="email"],
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #f4f4f4;
+}
+
+input[type="checkbox"] {
+    width: 10%;
+    padding: 10px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #f4f4f4;
+}
+
+button, .coffee-button, .github-button {
     display: inline-flex;
     align-items: center;
-    background-color: #FFDD00;
-    color: #000000;
     padding: 10px 20px;
-    border-radius: 8px;
     text-decoration: none;
     font-weight: bold;
     font-size: 16px;
-    border: 2px solid #000000;
+    border: none;
+    border-radius: 4px;
     transition: background-color 0.3s ease, transform 0.3s ease;
     text-align: center;
     justify-content: center;
-    width: 100%; /* Full width button */
+    width: 100%;
+    margin-bottom: 16px;
+    height: 44px;
+    line-height: 1.5;
+}
+
+button {
+    background-color: #01733F;
+    color: white;
+}
+
+button:hover {
+    background-color: #002244;
+    transform: scale(1.05);
+}
+
+.coffee-button {
+    background-color: #FFDD00;
+    color: #000000;
 }
 
 .coffee-button:hover {
@@ -162,28 +157,9 @@ a:hover {
     transform: scale(1.05);
 }
 
-.coffee-button img {
-    margin-right: 10px;
-    width: 24px;
-    height: 24px;
-}
-
-/* GitHub Issues button styling */
 .github-button {
-    display: inline-flex;
-    align-items: center;
     background-color: #24292e;
     color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    border: 2px solid #24292e;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    text-align: center;
-    justify-content: center;
-    width: 100%; /* Full width button */
 }
 
 .github-button:hover {
@@ -191,8 +167,10 @@ a:hover {
     transform: scale(1.05);
 }
 
+.coffee-button img,
 .github-button img {
     margin-right: 10px;
     width: 24px;
     height: 24px;
+    vertical-align: middle; /* Align image vertically in the center */
 }
