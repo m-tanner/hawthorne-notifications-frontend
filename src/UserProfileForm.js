@@ -18,27 +18,36 @@ const UserProfileForm = () => {
 
   useEffect(() => {
     // Fetch user data from the API when the component mounts
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`/api/user/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await response.json();
-        setFormData({
-          preferred_name: data.preferred_name || '',
-          email_address: data.email_address || '',
-          favorite_keywords: data.favorite_keywords || [],
-          favorites_only: data.favorites_only || false,
-        });
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
+    const fetchUserData = async (userId) => {
+      const response = await fetch(`/api/user/${userId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
       }
+      const data = await response.json();
+      return {
+        preferredName: data.preferred_name || '',
+        emailAddress: data.email_address || '',
+        favoriteKeywords: data.favorite_keywords || [],
+        favoritesOnly: data.favorites_only || false,
+      };
+    };
+    const updateUserData = (data) => {
+      if (data) {
+        setFormData(data);
+      }
+      setLoading(false);
     };
 
-    fetchData();
+    const fetchData = async () => {
+      setLoading(true);
+      const userData = await fetchUserData(id);
+      updateUserData(userData);
+    };
+
+    fetchData().catch((error) => {
+      setError(error.message);
+      setLoading(false);
+    });
   }, [id]);
 
   const handleChange = (e) => {
@@ -61,43 +70,70 @@ const UserProfileForm = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const submitUserData = async (id, formData) => {
+    const response = await fetch(`/api/user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ secret: id, user: formData }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit data');
+    }
+
+    return response.json();
+  };
+
+  const handleFormSubmission = async () => {
     try {
-      const response = await fetch(`/api/user`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ secret: id, user: formData }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to submit data');
-      }
-      const data = await response.json();
+      const data = await submitUserData(id, formData);
       console.log('Form Data Submitted:', data);
       setSubmitted(true);
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      setError(error.message);
     }
   };
 
-  const triggerNotifications = async () => {
-    try {
-      const response = await fetch(`/api/trigger`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to trigger notifications');
-      }
-      setTriggerResponse({ success: true, message: result.message });
-    } catch (err) {
-      setTriggerResponse({ success: false, message: err.message });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleFormSubmission().catch((error) => {
+      setError(error.message);
+    });
+  };
+
+
+  const triggerNotificationsApi = async () => {
+    const response = await fetch(`/api/trigger`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to trigger notifications');
     }
+
+    return result;
+  };
+
+  const handleTriggerNotifications = async () => {
+    try {
+      const result = await triggerNotificationsApi();
+      setTriggerResponse({ success: true, message: result.message });
+    } catch (error) {
+      setTriggerResponse({ success: false, message: error.message });
+    }
+  };
+
+  const triggerNotifications = () => {
+    handleTriggerNotifications().catch((error) => {
+      setTriggerResponse({ success: false, message: error.message });
+    });
   };
 
   if (loading) {
