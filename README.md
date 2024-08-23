@@ -1,9 +1,8 @@
-# User Profile Editor React App
-
-This is a simple React application that allows users to edit their profile information, including their preferred name, email address, favorite keywords, and a toggle for favorites only. The app is Dockerized and ready to be deployed on Vercel or any other container platform.
+# hawthornestereo.news
 
 ## Features
 
+- Sign up or log in without any passwords.
 - Edit user profile information through a simple form.
 - Manage state using React hooks.
 - Environment variables support for API URL and keys.
