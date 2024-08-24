@@ -76,7 +76,7 @@ deploy: install ## Deploy to Google Cloud Functions
 	docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://hawthornestereo.news --platform linux/amd64 -t $(LOCAL_BUILD) .
 	docker tag $(LOCAL_BUILD) $(FRONTEND_TAG)
 	docker push $(FRONTEND_TAG)
-	gcloud run services replace frontend.yaml --region us-west1
+	gcloud run services update frontend.yaml --region us-west1
 
 help: ## Display this help message
 	@echo "Available targets:"
