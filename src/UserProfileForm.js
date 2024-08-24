@@ -218,11 +218,11 @@ const UserProfileForm = () => {
                     />
                 </div>
                 <div className="form-group checkbox-group">
-                    <label htmlFor="unsubscribe">Unsubscribe?</label>
+                    <label htmlFor="unsubscribed">Unsubscribe?</label>
                     <input
                         type="checkbox"
-                        id="unsubscribe"
-                        name="unsubscribe"
+                        id="unsubscribed"
+                        name="unsubscribed"
                         checked={formData.unsubscribed}
                         onChange={handleChange}
                     />
