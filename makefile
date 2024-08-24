@@ -6,7 +6,7 @@ COMMIT_SHA := $(shell git rev-parse --short HEAD)
 BREW_PREFIX := $(shell brew --prefix)
 
 # Targets
-.PHONY: all check-env setup install login build ci run clean deploy help
+.PHONY: all check-env setup install login build ci run clean local deploy help
 
 # Default target: run all tasks
 all: clean install deploy ## Run all tasks (clean, lint, test, build, deploy)
@@ -60,7 +60,11 @@ rm-package-lock: ## Remove the package-lock.json file
 	rm package-lock.json
 	rm -rf node_modules
 
-deploy: ## Deploy to Google Cloud Functions
+local: ## Build artifact for local development
+	@echo "==> Building local image with commit SHA $(COMMIT_SHA)..."
+	docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://localhost:3000 --platform linux/amd64 -t $(GCP_ARTIFACT_NAME):latest .
+
+deploy: install ## Deploy to Google Cloud Functions
 	@echo "==> Building image with commit SHA $(COMMIT_SHA) and pushing to Google Artifact Registry..."
 	docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://hawthornestereo.news --platform linux/amd64 -t $(GCP_ARTIFACT_NAME):$(COMMIT_SHA) .
 	docker tag $(GCP_ARTIFACT_NAME):$(COMMIT_SHA) $(GCP_ARTIFACT_PREFIX)/$(GCP_PROJECT_NAME)/$(GCP_ARTIFACT_REPO)/$(GCP_ARTIFACT_NAME):latest
