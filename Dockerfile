@@ -10,8 +10,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies for both React and Express
-RUN npm install
+# Install dependencies
+RUN npm ci
 
 # Copy the rest of the application code
 COPY . .
@@ -19,26 +19,17 @@ COPY . .
 # Build the React app
 RUN npm run build
 
-# Stage 2: Set up the Express server
-FROM node:20-alpine
+# Stage 2: Set up the Express server with Distroless
+FROM gcr.io/distroless/nodejs20
 
 # Set working directory inside the container
 WORKDIR /app
 
-# Copy only the package.json and package-lock.json files to install production dependencies
-COPY package*.json ./
-
-# Install only the production dependencies
-RUN npm install --only=production
-
-# Copy the build from the first stage
+# Copy only the necessary files from the build stage
 COPY --from=build /app/build ./build
-
-# Copy the server files
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/node_modules ./node_modules
 COPY src/server.js .
 
-# Expose the port the app runs on
-EXPOSE 3000
-
 # Command to start the server
-CMD ["node", "server.js"]
+CMD ["server.js"]
