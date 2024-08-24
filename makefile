@@ -23,8 +23,9 @@ setup: ## Set up development dependencies
 	else \
 		echo "gcloud is not installed. Continuing..."; \
 		brew --version; \
-		brew install direnv; \
-		direnv allow; \
+		brew install node; \
+		npm install -g npm; \
+		nvm install --lts; \
 		brew install google-cloud-sdk; \
 		gcloud init; \
 	fi
