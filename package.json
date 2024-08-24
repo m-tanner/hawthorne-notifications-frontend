@@ -21,27 +21,26 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "express-pino-logger": "^7.0.0",
     "express-rate-limit": "^7.4.0",
     "helmet": "^7.1.0",
-    "micromatch": "^4.0.8",
     "node-fetch": "^3.3.2",
-    "nth-check": "^2.1.1",
     "pino": "^9.3.2",
-    "postcss": "^8.4.41",
+    "pino-http": "^10.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "react-scripts": "^5.0.1"
   },
+  "peerDependencies": {
+    "micromatch": "^4.0.8",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.41",
+    "svgo": "^3.3.2"
+  },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.35.0"
-  },
-  "resolutions": {
-    "nth-check": "^2.1.1",
-    "postcss": "^8.4.41"
   },
   "browserslist": {
     "production": [
