@@ -43,3 +43,6 @@ steps:
 images:
   - us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-frontend:latest
   - us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-app:latest
+
+logging:
+  log: CLOUD_LOGGING_ONLY
