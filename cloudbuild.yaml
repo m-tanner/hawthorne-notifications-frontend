@@ -4,7 +4,6 @@ steps:
     args: [
       'build',
       '-t', 'us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-frontend:latest',
-      '--build-arg', 'REACT_APP_FRONTEND_BASE_URL=https://hawthornestereo.news',
       '--platform', 'linux/amd64',
       '.'
     ]
@@ -38,7 +37,7 @@ steps:
     args:
       - '-c'
       - |
-        cat frontend.yaml | envsubst | gcloud run services replace -
+        cat frontend.yaml | gcloud run services replace -
 
 images:
   - us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-frontend:latest

@@ -17,6 +17,7 @@ const agent = new http.Agent({ keepAlive: true });
 
 const app = express();
 const port = 3000;
+const frontendURL = process.env.REACT_APP_FRONTEND_BASE_URL || 'http://localhost:3000';
 const backendURL = process.env.REACT_APP_BACKEND_BASE_URL || 'http://backend:8080';
 
 // Middleware for JSON parsing
@@ -64,15 +65,12 @@ app.post('/api/login', async (req, res) => {
     if (!email_address) {
         return res.status(400).json({ error: 'Email address is required' });
     }
-    if (!url) {
-        return res.status(400).json({ error: 'URL is required' });
-    }
 
     try {
         const response = await fetch(`${backendURL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email_address, url }),
+            body: JSON.stringify({ email_address, url: frontendURL }),
             agent,
         });
 

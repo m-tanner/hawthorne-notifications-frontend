@@ -1,9 +1,6 @@
 # Stage 1: Build the React app
 FROM node:20-alpine AS build
 
-# Set environment variables for the build process
-ARG REACT_APP_FRONTEND_BASE_URL
-
 # Step 2: Set the working directory in the container
 WORKDIR /app
 

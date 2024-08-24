@@ -25,6 +25,8 @@ spec:
           env:
             - name: REACT_APP_BACKEND_BASE_URL
               value: http://localhost:8080
+            - name: REACT_APP_FRONTEND_BASE_URL
+              value: https://hawthorne-notifications.news
             - name: env
               value: prod
           resources:
@@ -40,6 +42,8 @@ spec:
         - name: hawthorne-notifications-app-1
           image: us-west1-docker.pkg.dev/hawthorne-notifications/hawthorne-notifications-repo/hawthorne-notifications-app:latest
           env:
+            - name: REACT_APP_FRONTEND_BASE_URL
+              value: https://hawthorne-notifications.news
             - name: env
               value: prod
             - name: GMAIL_PASSWORD

@@ -1,20 +1,18 @@
 import React, {useState} from "react";
 
-const frontEndURL = process.env.REACT_APP_FRONTEND_BASE_URL;
-
 const AuthForm = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
-    const submitLoginForm = async (email_address, url) => {
+    const submitLoginForm = async (email_address) => {
         setMessage('')
         const response = await fetch(`/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({email_address: email_address, url: url }),
+            body: JSON.stringify({email_address: email_address }),
         });
 
         if (!response.ok) {
@@ -25,7 +23,7 @@ const AuthForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await submitLoginForm(email, `${frontEndURL}/user-profile/`).catch((error) => {
+        await submitLoginForm(email).catch((error) => {
             setMessage(`Error: ${error.message}`);
             console.error('Error:', error);
         });

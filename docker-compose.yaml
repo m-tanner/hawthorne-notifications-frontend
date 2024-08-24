@@ -4,11 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - REACT_APP_FRONTEND_BASE_URL=http://localhost:3000
     container_name: hawthorne-notifications-frontend
     environment:
       - REACT_APP_BACKEND_BASE_URL=http://backend:8080
+      - REACT_APP_FRONTEND_BASE_URL=http://localhost:3000
     ports:
       - "3000:3000"
     deploy:
@@ -28,9 +27,10 @@ services:
     image: hawthorne-notifications-app:latest
     restart: unless-stopped
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/GOOGLE_APPLICATION_CREDENTIALS
-      GMAIL_PASSWORD: ${GMAIL_PASSWORD}
-      env: dev
+      - REACT_APP_FRONTEND_BASE_URL=http://localhost:3000
+      - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/GOOGLE_APPLICATION_CREDENTIALS
+      - GMAIL_PASSWORD=${GMAIL_PASSWORD}
+      - env=dev
     secrets:
       - GOOGLE_APPLICATION_CREDENTIALS
     ports:
