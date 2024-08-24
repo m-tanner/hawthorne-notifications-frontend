@@ -1,3 +1,5 @@
+---
+apiVersion: google.devtools.cloudbuild.v1.Build
 steps:
   # Step 1: Build the frontend service
   - name: 'gcr.io/cloud-builders/docker'
@@ -37,6 +39,7 @@ steps:
     args:
       - '-c'
       - |
+        gcloud config set run/region us-west1
         cat frontend.yaml | gcloud run services update -
 
 images:
