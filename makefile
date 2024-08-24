@@ -1,7 +1,13 @@
-GCP_PROJECT_NAME := hawthorne-notifications
-GCP_ARTIFACT_PREFIX := "us-west1-docker.pkg.dev"
-GCP_ARTIFACT_REPO := "$(GCP_PROJECT_NAME)-repo"
-GCP_ARTIFACT_NAME := "$(GCP_PROJECT_NAME)-frontend"
+GCP_PROJECT := hawthorne-notifications
+GCP_ARTIFACT_PREFIX := us-west1-docker.pkg.dev
+GCP_ARTIFACT_REPO := $(GCP_PROJECT)-repo
+GCP_TAG_PREFIX := $(GCP_ARTIFACT_PREFIX)/$(GCP_PROJECT)/$(GCP_ARTIFACT_REPO)
+GCP_BACKEND_NAME := $(GCP_PROJECT)-app
+GCP_FRONTEND_NAME := $(GCP_PROJECT)-frontend
+TAG := latest
+LOCAL_BUILD=$(GCP_FRONTEND_NAME):$(COMMIT_SHA)
+BACKEND_TAG=$(GCP_TAG_PREFIX)/$(GCP_BACKEND_NAME):$(TAG)
+FRONTEND_TAG=$(GCP_TAG_PREFIX)/$(GCP_FRONTEND_NAME):$(TAG)
 COMMIT_SHA := $(shell git rev-parse --short HEAD)
 BREW_PREFIX := $(shell brew --prefix)
 
@@ -64,12 +70,13 @@ local: ## Build artifact for local development
 	@echo "==> Building local image with commit SHA $(COMMIT_SHA)..."
 	docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://localhost:3000 --platform linux/amd64 -t $(GCP_ARTIFACT_NAME):latest .
 
+
 deploy: install ## Deploy to Google Cloud Functions
 	@echo "==> Building image with commit SHA $(COMMIT_SHA) and pushing to Google Artifact Registry..."
-	docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://hawthornestereo.news --platform linux/amd64 -t $(GCP_ARTIFACT_NAME):$(COMMIT_SHA) .
-	docker tag $(GCP_ARTIFACT_NAME):$(COMMIT_SHA) $(GCP_ARTIFACT_PREFIX)/$(GCP_PROJECT_NAME)/$(GCP_ARTIFACT_REPO)/$(GCP_ARTIFACT_NAME):latest
-	docker push $(GCP_ARTIFACT_PREFIX)/$(GCP_PROJECT_NAME)/$(GCP_ARTIFACT_REPO)/$(GCP_ARTIFACT_NAME):latest
-	# deployment on Google Cloud Run is automatic on commit to `main` branch
+	docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://hawthornestereo.news --platform linux/amd64 -t $(LOCAL_BUILD) .
+	docker tag $(LOCAL_BUILD) $(FRONTEND_TAG)
+	docker push $(FRONTEND_TAG)
+	gcloud run services replace frontend.yaml --region us-west1
 
 help: ## Display this help message
 	@echo "Available targets:"
