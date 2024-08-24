@@ -3,8 +3,9 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
-      '-t', 'gcr.io/$PROJECT_ID/hawthorne-notifications-frontend',
+      '-t', 'us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-frontend:latest',
       '--build-arg', 'REACT_APP_FRONTEND_BASE_URL=$REACT_APP_FRONTEND_BASE_URL',
+      '--platform', 'linux/amd64',
       '.'
     ]
 
@@ -12,46 +13,33 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
-      '-t', 'gcr.io/$PROJECT_ID/hawthorne-notifications-app',
+      '-t', 'us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-app:latest',
+      '--platform', 'linux/amd64',
       '.'
     ]
 
-  # Step 3: Deploy the backend service to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
+  # Step 3: Push the frontend image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
     args: [
-      'run', 'deploy', 'hawthorne-notifications-backend',
-      '--image', 'gcr.io/$PROJECT_ID/hawthorne-notifications-app',
-      '--platform', 'managed',
-      '--region', 'us-west1',
-      '--memory', '128Mi',
-      '--cpu', '0.5',
-      '--set-env-vars', 'GMAIL_PASSWORD=${_GMAIL_PASSWORD},env=prod',
-      '--allow-unauthenticated'
+      'push',
+      'us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-frontend:latest'
     ]
 
-  # Step 4: Deploy the frontend service to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
+  # Step 4: Push the backend image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
     args: [
-      'run', 'deploy', 'hawthorne-notifications-frontend',
-      '--image', 'gcr.io/$PROJECT_ID/hawthorne-notifications-frontend',
-      '--platform', 'managed',
-      '--region', 'us-central1', # Adjust the region as needed
-      '--memory', '128Mi',
-      '--cpu', '0.5',
-      '--set-env-vars', 'REACT_APP_BACKEND_BASE_URL=http://backend:8080',
-      '--allow-unauthenticated'
+      'push',
+      'us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-app:latest'
     ]
 
-substitutions:
-  _GMAIL_PASSWORD: $
-
-secrets:
-- kmsKeyName: projects/$PROJECT_ID/locations/global/keyRings/$KEYRING_NAME/cryptoKeys/$KEY_NAME
-  secretEnv:
-    GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
+  # Step 5: Deploy the Knative Service for frontend and backend
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cat frontend.yaml | envsubst | gcloud run services replace -
 
 images:
-  - gcr.io/$PROJECT_ID/hawthorne-notifications-frontend
-  - gcr.io/$PROJECT_ID/hawthorne-notifications-app
+  - us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-frontend:latest
+  - us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-app:latest
