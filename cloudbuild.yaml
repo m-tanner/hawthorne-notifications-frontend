@@ -4,7 +4,7 @@ steps:
     args: [
       'build',
       '-t', 'us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-frontend:latest',
-      '--build-arg', 'REACT_APP_FRONTEND_BASE_URL=$REACT_APP_FRONTEND_BASE_URL',
+      '--build-arg', 'REACT_APP_FRONTEND_BASE_URL=https://hawthornestereo.news',
       '--platform', 'linux/amd64',
       '.'
     ]
