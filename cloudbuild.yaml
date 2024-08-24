@@ -37,7 +37,7 @@ steps:
     args:
       - '-c'
       - |
-        cat frontend.yaml | gcloud run services replace -
+        cat frontend.yaml | gcloud run services update -
 
 images:
   - us-west1-docker.pkg.dev/$PROJECT_ID/hawthorne-notifications-repo/hawthorne-notifications-frontend:latest
