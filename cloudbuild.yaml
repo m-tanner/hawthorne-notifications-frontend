@@ -1,5 +1,4 @@
 ---
-apiVersion: google.devtools.cloudbuild.v1.Build
 steps:
   # Step 1: Build the frontend service
   - name: 'gcr.io/cloud-builders/docker'
