@@ -9,7 +9,7 @@ BREW_PREFIX := $(shell brew --prefix)
 .PHONY: all check-env setup install login build ci run clean deploy help
 
 # Default target: run all tasks
-all: clean build deploy ## Run all tasks (clean, lint, test, build, deploy)
+all: clean install deploy ## Run all tasks (clean, lint, test, build, deploy)
 
 check-env: ## Check environment variables
 	@if [ -z "$(GOOGLE_APPLICATION_CREDENTIALS)" ]; then echo "Error: GOOGLE_APPLICATION_CREDENTIALS is not set"; exit 1; fi
@@ -54,7 +54,12 @@ clean: ## Clean up the build artifacts
 	@echo "==> Cleaning up..."
 	rm -rf dist
 
-deploy: build ## Deploy to Google Cloud Functions
+rm-package-lock: ## Remove the package-lock.json file
+	@echo "==> Removing package-lock.json..."
+	rm package-lock.json
+	rm -rf node_modules
+
+deploy: ## Deploy to Google Cloud Functions
 	@echo "==> Building image with commit SHA $(COMMIT_SHA) and pushing to Google Artifact Registry..."
 	docker build --build-arg REACT_APP_FRONTEND_BASE_URL=https://hawthornestereo.news --platform linux/amd64 -t $(GCP_ARTIFACT_NAME):$(COMMIT_SHA) .
 	docker tag $(GCP_ARTIFACT_NAME):$(COMMIT_SHA) $(GCP_ARTIFACT_PREFIX)/$(GCP_PROJECT_NAME)/$(GCP_ARTIFACT_REPO)/$(GCP_ARTIFACT_NAME):latest

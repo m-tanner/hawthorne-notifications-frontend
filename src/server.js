@@ -4,6 +4,7 @@ const path = require('path');
 const compression = require('compression');
 const helmet = require('helmet');
 const pino = require('pino')();
+const pinoHttp = require('pino-http');
 const rateLimit = require('express-rate-limit');
 const http = require('http');
 let fetch;
@@ -27,8 +28,8 @@ app.use(compression());
 // Set various HTTP headers for security
 app.use(helmet());
 
-// Set up Pino for structured logging
-app.use(require('express-pino-logger')({ logger: pino }));
+// Set up Pino for structured logging using pino-http
+app.use(pinoHttp({ logger: pino }));
 
 // Enable CORS with specific configuration for the API routes
 app.use(cors({
