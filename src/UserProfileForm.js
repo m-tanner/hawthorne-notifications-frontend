@@ -198,7 +198,7 @@ const UserProfileForm = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="favorite_keywords">Favorite Keywords (comma-separated, no phrases):</label>
+                    <label htmlFor="favorite_keywords">Favorite Keywords (comma-separated):</label>
                     <input
                         type="text"
                         id="favorite_keywords"
