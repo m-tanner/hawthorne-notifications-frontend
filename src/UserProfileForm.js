@@ -13,6 +13,8 @@ const UserProfileForm = () => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+
     const [actionResponse, setActionResponse] = useState(null);
 
     useEffect(() => {
@@ -79,10 +81,9 @@ const UserProfileForm = () => {
         try {
             const data = await submitUserData(id, formData);
             console.log('Form Data Submitted:', data);
-            setActionResponse({success: true, message: 'User profile updated successfully!'});
+            setSubmitted(true)
         } catch (error) {
-            setError(error.message);
-            setActionResponse({success: false, message: error.message});
+            setError(error.message)
         }
     };
 
@@ -94,12 +95,20 @@ const UserProfileForm = () => {
     };
 
 
-    const triggerNotificationsApi = async () => {
+    const triggerNotificationsApi = async (id) => {
+        if (id === '') {
+            throw new Error('id cannot be empty when triggering notifications');
+        }
+        console.log(id)
+
         const response = await fetch(`/api/trigger`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify({
+                secret: id
+            }),
         });
 
         const result = await response.json();
@@ -113,7 +122,7 @@ const UserProfileForm = () => {
 
     const handleTriggerNotifications = async () => {
         try {
-            const result = await triggerNotificationsApi();
+            const result = await triggerNotificationsApi(id);
             setActionResponse({success: true, message: result.message});
         } catch (error) {
             setActionResponse({success: false, message: error.message});
@@ -134,10 +143,21 @@ const UserProfileForm = () => {
         );
     }
 
+    if (submitted) {
+        return (
+            <div className={"user-profile-form-container"}>
+                <p>
+                    Your profile has been updated!
+                    Log in again to make more changes.
+                </p>
+            </div>
+        );
+    }
+
     if (error === "Failed to fetch data") {
         return (
             <div className={"user-profile-form-container"}>
-                <p>This login token is expired or doesn't exist</p>
+                <p>This login token is expired or doesn't exist.</p>
             </div>
         );
     }
@@ -174,6 +194,7 @@ const UserProfileForm = () => {
                         value={formData.email_address}
                         onChange={handleChange}
                         required
+                        readOnly={true}
                     />
                 </div>
                 <div className="form-group">
@@ -216,7 +237,7 @@ const UserProfileForm = () => {
                    rel="noopener noreferrer"
                    className="github-button">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub Icon"/>
-                    Submit Issues & Feature Requests
+                    Report a Bug
                 </a>
             </form>
             {/* Conditionally render the "Trigger Notifications" button */}
@@ -224,10 +245,11 @@ const UserProfileForm = () => {
                     (formData.email_address.endsWith('@hawthornestereo.com') ||
                         formData.email_address.endsWith('@tanner-wei.com')))
                 && (
-                <div>
-                    <button onClick={triggerNotifications}>Trigger Notifications</button>
-                </div>
-            )}
+                    <button className="trigger-button" onClick={triggerNotifications}>
+                        <img src="https://cdn-icons-png.flaticon.com/512/407/407016.png" alt="GitHub Icon"/>
+                        Trigger Notifications
+                    </button>
+                )}
             {actionResponse && (
                 <p>
                     {actionResponse.success ? (

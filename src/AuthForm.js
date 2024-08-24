@@ -36,7 +36,10 @@ const AuthForm = () => {
         return (
             <div className="auth-form-container">
                 <h2>Check Your Email</h2>
-                <p>We've sent you an email with further instructions. Please check your inbox.</p>
+                <p>
+                    We've sent you an email with a link to confirm your email or sign-in.
+                    Please check your inbox!
+                </p>
             </div>
         );
     }
@@ -66,7 +69,7 @@ const AuthForm = () => {
                 <a href="https://github.com/m-tanner/hawthornestereo-news/issues" target="_blank"
                    rel="noopener noreferrer" className="github-button">
                     <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub Icon"/>
-                    Submit Issues & Feature Requests
+                    Report a Bug
                 </a>
                 {message && <p>{message}</p>}
             </form>

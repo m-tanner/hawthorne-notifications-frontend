@@ -10,7 +10,7 @@ const App = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<AuthForm/>}/>
+                <Route path="*" element={<AuthForm/>}/>
                 <Route path="/user-profile/:id" element={<UserProfileForm/>}/>
             </Routes>
         </Router>

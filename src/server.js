@@ -81,13 +81,14 @@ app.get('/api/user/:id', async (req, res) => {
 
 // New API endpoint to trigger notifications
 app.post('/api/trigger', async (req, res) => {
+    const {secret} = req.body;
     try {
         const response = await fetch(`${backendURL}/trigger`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({}),
+            body: JSON.stringify({ secret: secret }),
         });
         if (!response.ok) {
             console.error('Error triggering notifications on the external server');
@@ -99,6 +100,20 @@ app.post('/api/trigger', async (req, res) => {
     } catch (error) {
 
     }
+});
+
+app.get('/api/click', async (req, res) => {
+    const { tracking_id, destination } = req.query;
+
+    if (!tracking_id || !destination) {
+        return res.status(400).json({ error: 'tracking_id and destination are required' });
+    }
+
+    fetch(`${backendURL}/click?tracking_id=${encodeURIComponent(tracking_id)}&destination=${encodeURIComponent(destination)}`).then(
+        // do nothing, we don't care if this succeeds or not, the backend server will track its own errors
+    );
+
+    return res.redirect(destination);
 });
 
 // Catch-all handler to serve the React frontend for any other routes
