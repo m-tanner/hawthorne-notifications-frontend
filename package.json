@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "A simple React app to edit user profile information.",
   "main": "src/index.js",
-  "proxy": "http://localhost:8080",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

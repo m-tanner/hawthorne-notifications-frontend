@@ -17,7 +17,7 @@ const agent = new http.Agent({ keepAlive: true });
 
 const app = express();
 const port = 3000;
-const frontendURL = process.env.REACT_APP_FRONTEND_BASE_URL || 'http://localhost:3000';
+const frontendURL = process.env.REACT_APP_FRONTEND_BASE_URL || `http://localhost:${port}`;
 const backendURL = process.env.REACT_APP_BACKEND_BASE_URL || 'http://backend:8080';
 
 // Middleware for JSON parsing
@@ -34,8 +34,8 @@ app.use(pinoHttp({ logger: pino }));
 
 // Enable CORS with specific configuration for the API routes
 app.use(cors({
-    origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: [`http://localhost:${port}`],
+    methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
 }));
@@ -70,7 +70,7 @@ app.post('/api/login', async (req, res) => {
         const response = await fetch(`${backendURL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email_address, url: frontendURL }),
+            body: JSON.stringify({ email_address, url: `${frontendURL}/user-profile/` }),
             agent,
         });
 

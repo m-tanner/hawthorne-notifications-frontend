@@ -75,7 +75,7 @@ deploy: install ## Deploy to Google Cloud Functions
 	docker build --platform linux/amd64 -t $(LOCAL_BUILD) .
 	docker tag $(LOCAL_BUILD) $(FRONTEND_TAG)
 	docker push $(FRONTEND_TAG)
-	gcloud run services update frontend.yaml --region us-west1
+	gcloud run services update $(GCP_FRONTEND_NAME) --region us-west1 --image $(FRONTEND_TAG)
 
 help: ## Display this help message
 	@echo "Available targets:"
