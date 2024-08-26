@@ -20,6 +20,9 @@ const port = 3000;
 const frontendURL = process.env.REACT_APP_FRONTEND_BASE_URL || `http://localhost:${port}`;
 const backendURL = process.env.REACT_APP_BACKEND_BASE_URL || 'http://backend:8080';
 
+// allow express-rate-limit to accurately identify users
+app.set('trust proxy', 1);
+
 // Middleware for JSON parsing
 app.use(express.json());
 
