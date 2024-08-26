@@ -158,24 +158,36 @@ app.post('/api/trigger', async (req, res) => {
 });
 
 // API endpoint to track clicks
-app.get('/api/click', async (req, res) => {
+app.get('/api/click', (req, res) => {
     const { tracking_id, destination } = req.query;
 
     if (!tracking_id || !destination) {
         return res.status(400).json({ error: 'tracking_id and destination are required' });
     }
 
-    try {
-        fetch(`${backendURL}/click?tracking_id=${encodeURIComponent(tracking_id)}&destination=${encodeURIComponent(destination)}`, { agent })
-            .then(response => {
-                if (!response.ok) {
-                    pino.warn('Failed to track click on external server');
+    const attemptFetch = async (retry = false) => {
+        try {
+            const response = await fetch(`${backendURL}/click?tracking_id=${encodeURIComponent(tracking_id)}&destination=${encodeURIComponent(destination)}`, { agent });
+            if (!response.ok) {
+                pino.warn('Failed to track click on external server');
+                if (!retry) {
+                    pino.info('Retrying fetch...');
+                    return attemptFetch(true); // Retry once if the first attempt fails
                 }
-            })
-            .catch(error => {
-                pino.error('Error during click tracking:', error);
-            });
+            }
+        } catch (error) {
+            pino.error('Error during click tracking:', error);
+            if (!retry) {
+                pino.info('Retrying fetch after error...');
+                return attemptFetch(true); // Retry once if an error occurs
+            }
+        }
+    };
 
+    // Fire-and-forget fetch request with retry logic
+    void attemptFetch();
+
+    try {
         return res.redirect(destination);
     } catch (error) {
         pino.error('Error processing click:', error);
