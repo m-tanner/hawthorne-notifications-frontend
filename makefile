@@ -68,7 +68,7 @@ rm-package-lock: ## Remove the package-lock.json file
 
 local: ## Build artifact for local development
 	@echo "==> Building local image with commit SHA $(COMMIT_SHA)..."
-	docker build --platform linux/amd64 -t $(GCP_ARTIFACT_NAME):latest .
+	docker build --platform linux/amd64 -t $(GCP_FRONTEND_NAME):latest .
 
 deploy: install ## Deploy to Google Cloud Functions
 	@echo "==> Building image with commit SHA $(COMMIT_SHA) and pushing to Google Artifact Registry..."
