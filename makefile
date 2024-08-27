@@ -12,7 +12,7 @@ COMMIT_SHA := $(shell git rev-parse --short HEAD)
 BREW_PREFIX := $(shell brew --prefix)
 
 # Targets
-.PHONY: all check-env setup install login build ci run clean local deploy help
+.PHONY: all check-env setup install login build ci run clean fresh local deploy help
 
 # Default target: run all tasks
 all: clean install deploy ## Run all tasks (clean, lint, test, build, deploy)
@@ -61,14 +61,15 @@ clean: ## Clean up the build artifacts
 	@echo "==> Cleaning up..."
 	rm -rf dist
 
-rm-package-lock: ## Remove the package-lock.json file
+fresh: ## Remove the package-lock.json file
 	@echo "==> Removing package-lock.json..."
 	rm package-lock.json
 	rm -rf node_modules
+	npm install
 
 local: ## Build artifact for local development
 	@echo "==> Building local image with commit SHA $(COMMIT_SHA)..."
-	docker build --platform linux/amd64 -t $(GCP_FRONTEND_NAME):latest .
+	docker build --platform linux/amd64 -t $(LOCAL_BUILD) .
 
 deploy: install ## Deploy to Google Cloud Functions
 	@echo "==> Building image with commit SHA $(COMMIT_SHA) and pushing to Google Artifact Registry..."

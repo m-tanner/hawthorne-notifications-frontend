@@ -35,18 +35,6 @@ jspm_packages/
 .DS_Store
 Thumbs.db
 
-# dotenv environment variables file
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# lockfiles (choose one if using npm, yarn, or pnpm)
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
 # Optional: Ignore compiled JavaScript files
 *.js
 *.jsx
@@ -69,11 +57,6 @@ pnpm-lock.yaml
 .bundle/
 *.bundle.js
 *.bundle.css
-
-# Optional: Ignore static files
-src/
-assets/
-static/
 
 # Optional: Ignore coverage results
 coverage/
