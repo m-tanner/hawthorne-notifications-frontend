@@ -12,7 +12,7 @@ COMMIT_SHA := $(shell git rev-parse --short HEAD)
 BREW_PREFIX := $(shell brew --prefix)
 
 # Targets
-.PHONY: all check-env setup install login build ci run clean local deploy help
+.PHONY: all check-env setup install login build run clean fresh local deploy help
 
 # Default target: run all tasks
 all: clean install deploy ## Run all tasks (clean, lint, test, build, deploy)
@@ -30,15 +30,15 @@ setup: ## Set up development dependencies
 		echo "gcloud is not installed. Continuing..."; \
 		brew --version; \
 		brew install node; \
-		npm install -g npm; \
+		npm install -g pnpm; \
 		nvm install --lts; \
 		brew install google-cloud-sdk; \
 		gcloud init; \
 	fi
 
-install: ## Set up npm dependencies
-	@echo "==> Installing npm dependencies..."
-	npm install
+install: ## Set up pnpm dependencies
+	@echo "==> Installing pnpm dependencies..."
+	pnpm install
 
 login: ## Log in to gcloud CLI
 	@echo "==> Logging in for gcloud cli..."
@@ -47,28 +47,26 @@ login: ## Log in to gcloud CLI
 
 build: check-env ## Build the application
 	@echo "==> Building the application..."
-	npm run build
-
-ci: check-env
-	@echo ""
-	npm ci
+	pnpm run build
 
 run: check-env ## Run the application locally
 	@echo "==> Running the application locally..."
-	npm start
+	pnpm run dev
 
 clean: ## Clean up the build artifacts
 	@echo "==> Cleaning up..."
 	rm -rf dist
 
-rm-package-lock: ## Remove the package-lock.json file
+fresh: ## Remove the package-lock.json file
 	@echo "==> Removing package-lock.json..."
 	rm package-lock.json
+	rm pnpm-lock.yaml
 	rm -rf node_modules
+	pnpm install
 
 local: ## Build artifact for local development
 	@echo "==> Building local image with commit SHA $(COMMIT_SHA)..."
-	docker build --platform linux/amd64 -t $(GCP_FRONTEND_NAME):latest .
+	docker build --platform linux/amd64 -t $(LOCAL_BUILD) .
 
 deploy: install ## Deploy to Google Cloud Functions
 	@echo "==> Building image with commit SHA $(COMMIT_SHA) and pushing to Google Artifact Registry..."

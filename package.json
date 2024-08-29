@@ -1,56 +1,42 @@
 {
   "name": "hawthorne-notifications-frontend",
-  "version": "1.0.0",
-  "description": "A simple React app to edit user profile information.",
-  "main": "src/index.js",
+  "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start"
   },
-  "keywords": [
-    "react",
-    "user-profile",
-    "editor"
-  ],
-  "author": "Michael Tanner",
-  "license": "Apache-2.0",
   "dependencies": {
+    "@heroicons/react": "^2.1.4",
+    "@tailwindcss/forms": "^0.5.7",
+    "@vercel/postgres": "^0.8.0",
+    "autoprefixer": "10.4.19",
+    "bcrypt": "^5.1.1",
+    "clsx": "^2.1.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "express-rate-limit": "^7.4.0",
     "helmet": "^7.1.0",
+    "install": "^0.13.0",
+    "next": "15.0.0-rc.0",
     "node-fetch": "^3.3.2",
     "pino": "^9.3.2",
-    "pino-http": "^10.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1",
-    "react-scripts": "^5.0.1"
-  },
-  "peerDependencies": {
-    "micromatch": "^4.0.8",
-    "nth-check": "^2.1.1",
-    "postcss": "^8.4.41",
-    "svgo": "^3.3.2"
+    "pino-http": "^10.2.0",
+    "postcss": "8.4.38",
+    "react": "19.0.0-rc-f994737d14-20240522",
+    "react-router-dom": "6.15.0",
+    "react-dom": "19.0.0-rc-f994737d14-20240522",
+    "tailwindcss": "3.4.4",
+    "typescript": "5.5.2",
+    "use-debounce": "^10.0.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.35.0"
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "20.14.8",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "engines": {
+    "node": ">=20.12.0"
   }
 }
