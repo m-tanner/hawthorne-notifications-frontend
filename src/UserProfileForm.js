@@ -14,7 +14,6 @@ const UserProfileForm = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [submitted, setSubmitted] = useState(false);
-
     const [actionResponse, setActionResponse] = useState(null);
 
     useEffect(() => {
@@ -22,7 +21,10 @@ const UserProfileForm = () => {
             setLoading(true);
             const response = await fetch(`/api/user/${id}`);
             if (!response.ok) {
-                throw new Error("Failed to fetch user data");
+                if (response.status === 404) {
+                    throw new Error('Login token not found');
+                }
+                throw new Error('Failed to fetch user data');
             }
             const data = await response.json();
             setFormData(data);
@@ -150,14 +152,20 @@ const UserProfileForm = () => {
                     Your profile has been updated!
                     Log in again to make more changes.
                 </p>
+                <p>
+                    <a href="https://hawthornestereo.news">Return to Login</a>
+                </p>
             </div>
         );
     }
 
-    if (error === "Failed to fetch data") {
+    if (error === 'Login token not found') {
         return (
             <div className={"user-profile-form-container"}>
-                <p>This login token is expired or doesn't exist.</p>
+                <p>This login token is used or expired. Please log in again.</p>
+                <p>
+                    <a href="https://hawthornestereo.news">Return to Login</a>
+                </p>
             </div>
         );
     }

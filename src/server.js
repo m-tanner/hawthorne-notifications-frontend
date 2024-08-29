@@ -117,20 +117,20 @@ app.post('/api/user', async (req, res) => {
 app.get('/api/user/:id', async (req, res) => {
     const { id } = req.params;
 
-    try {
-        const response = await fetch(`${backendURL}/user/${id}`, { agent });
+    const response = await fetch(`${backendURL}/user/${id}`, { agent });
 
-        if (!response.ok) {
-            throw new Error('Error fetching data from external server');
-        }
-
-        const data = await response.json();
-        pino.info('Successfully fetched data from external server');
-        res.json(data);
-    } catch (error) {
-        pino.error('Error fetching user data:', error);
-        res.status(500).json({ error: 'Internal server error' });
+    if (response.status === 404) {
+        return res.status(404).json({ error: 'Login token not found' });
     }
+    if (!response.ok) {
+        const e = 'Error fetching login token'
+        pino.error(e);
+        return res.status(500).json({ error: e });
+    }
+
+    const data = await response.json();
+    pino.info('Successfully fetched data from external server');
+    return res.json(data);
 });
 
 // API endpoint to trigger notifications
