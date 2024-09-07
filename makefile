@@ -1,4 +1,3 @@
-GCP_PROJECT := hawthorne-notifications
 GCP_ARTIFACT_PREFIX := us-west1-docker.pkg.dev
 GCP_ARTIFACT_REPO := $(GCP_PROJECT)-repo
 GCP_TAG_PREFIX := $(GCP_ARTIFACT_PREFIX)/$(GCP_PROJECT)/$(GCP_ARTIFACT_REPO)
@@ -76,6 +75,7 @@ deploy: install ## Deploy to Google Cloud Functions
 	docker build --platform linux/amd64 -t $(LOCAL_BUILD) .
 	docker tag $(LOCAL_BUILD) $(FRONTEND_TAG)
 	docker push $(FRONTEND_TAG)
+	gcloud config set project $(GCP_PROJECT)
 	gcloud run services update $(GCP_FRONTEND_NAME) --region us-west1 --image $(FRONTEND_TAG)
 
 help: ## Display this help message
