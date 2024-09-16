@@ -24,12 +24,16 @@ services:
       - net
 
   backend:
-    image: hawthorne-notifications-app:latest
+    image: hawthorne-notifications-backend:latest
     restart: unless-stopped
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/GOOGLE_APPLICATION_CREDENTIALS
+      - ENV=dev
+      - GMAIL_EMAIL=${GMAIL_EMAIL}
       - GMAIL_PASSWORD=${GMAIL_PASSWORD}
-      - env=dev
+      - VENDOR=${VENDOR}
+      - BUCKET_NAME=${BUCKET_NAME}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
     secrets:
       - GOOGLE_APPLICATION_CREDENTIALS
     ports:

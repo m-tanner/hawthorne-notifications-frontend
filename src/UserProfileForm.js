@@ -180,10 +180,11 @@ const UserProfileForm = () => {
 
     return (
         <div className={"user-profile-form-container"}>
-            <h2>Edit your profile</h2>
+            <h2>Hawthorne Stereo Wish List</h2>
+            <h3>Edit your preferences</h3>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="preferred_name">Preferred Name:</label>
+                    <label htmlFor="preferred_name">Your Name:</label>
                     <input
                         type="text"
                         id="preferred_name"
@@ -206,17 +207,18 @@ const UserProfileForm = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="favorite_keywords">Favorite Keywords (comma-separated):</label>
+                    <label htmlFor="favorite_keywords">Your Wish List (comma-separated):</label>
                     <input
                         type="text"
                         id="favorite_keywords"
                         name="favorite_keywords"
+                        placeholder="e.g. Luxman,SX-850,chrome bumper,equalizer"
                         value={Array.isArray(formData.favorite_keywords) ? formData.favorite_keywords.join(',') : ''}
                         onChange={handleChange}
                     />
                 </div>
                 <div className="form-group checkbox-group">
-                    <label htmlFor="favorites_only">Favorites Only:</label>
+                    <label htmlFor="favorites_only">Only notify about Wish List entries?</label>
                     <input
                         type="checkbox"
                         id="favorites_only"
@@ -236,17 +238,6 @@ const UserProfileForm = () => {
                     />
                 </div>
                 <button type="submit">Save</button>
-                <a href="https://www.buymeacoffee.com/m.tanner" target="_blank" rel="noopener noreferrer"
-                   className="coffee-button">
-                    <img src="/coffee.png" alt="Coffee Icon"/>
-                    Buy Me a Coffee
-                </a>
-                <a href="https://github.com/m-tanner/hawthornestereo-news/issues" target="_blank"
-                   rel="noopener noreferrer"
-                   className="github-button">
-                    <img src="/octocat.png" alt="GitHub Icon"/>
-                    Report a Bug
-                </a>
             </form>
             {/* Conditionally render the "Trigger Notifications" button */}
             {(typeof formData.email_address === 'string' &&

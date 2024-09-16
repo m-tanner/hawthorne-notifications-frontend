@@ -67,7 +67,7 @@ body, html {
     margin-left: auto; /* Aligns the checkbox to the right of the label */
 }
 
-h2 {
+h2, h3 {
     margin-top: 0;
     text-align: center;
     color: #002244;
